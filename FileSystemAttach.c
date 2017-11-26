@@ -1,7 +1,5 @@
+//attach the mounted volume to a file device object
 #include "SystemFilter.h"
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// This will attach to a DeviceObject that represents a mounted volume
 
 NTSTATUS FsFilterAttachToDevice(
 	__in PDEVICE_OBJECT         DeviceObject,
@@ -15,9 +13,7 @@ NTSTATUS FsFilterAttachToDevice(
 
 	ASSERT(!FsFilterIsAttachedToDevice(DeviceObject));
 
-	//
-	//  Create a new device object we can attach with.
-	//
+	//  Create a new device object we can attach
 
 	status = IoCreateDevice(
 		g_FileDriverObject,
@@ -35,9 +31,7 @@ NTSTATUS FsFilterAttachToDevice(
 
 	pDevExt = (PFSFILTER_DEVICE_EXTENSION)filterDeviceObject->DeviceExtension;
 
-	//
 	//  Propagate flags from Device Object we are trying to attach to.
-	//
 
 	if (FlagOn(DeviceObject->Flags, DO_BUFFERED_IO))
 	{
@@ -53,15 +47,6 @@ NTSTATUS FsFilterAttachToDevice(
 	{
 		SetFlag(filterDeviceObject->Characteristics, FILE_DEVICE_SECURE_OPEN);
 	}
-
-	//
-	//  Do the attachment.
-	//
-	//  It is possible for this attachment request to fail because this device
-	//  object has not finished initializing.  This can occur if this filter
-	//  loaded just as this volume was being mounted.
-	//
-
 	for (i = 0; i < 8; ++i)
 	{
 		LARGE_INTEGER interval;
@@ -76,10 +61,7 @@ NTSTATUS FsFilterAttachToDevice(
 			break;
 		}
 
-		//
-		//  Delay, giving the device object a chance to finish its
-		//  initialization so we can try again.
-		//
+		//  Delay introduced for the device object to finish its initialization
 
 		interval.QuadPart = (500 * DELAY_ONE_MILLISECOND);
 		KeDelayExecutionThread(KernelMode, FALSE, &interval);
@@ -87,24 +69,18 @@ NTSTATUS FsFilterAttachToDevice(
 
 	if (!NT_SUCCESS(status))
 	{
-		//
-		// Clean up.
-		//
-
+		// Clean up
 		IoDeleteDevice(filterDeviceObject);
 		filterDeviceObject = NULL;
 	}
 	else
 	{
-		//
-		// Mark we are done initializing.
-		//
-
+		// Mark we are done initializing
 		ClearFlag(filterDeviceObject->Flags, DO_DEVICE_INITIALIZING);
 
 		if (NULL != pFilterDeviceObject)
 		{
-			*pFilterDeviceObject = filterDeviceObject;
+			*pFilterDeviceObject = filterDeviceObject; //pointer to filter device object to initialize file object 
 		}
 	}
 
@@ -121,7 +97,6 @@ void FsFilterDetachFromDevice(
 	IoDeleteDevice(DeviceObject);
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
 // This determines whether we are attached to the given device
 
 BOOLEAN FsFilterIsAttachedToDevice(
@@ -131,10 +106,7 @@ BOOLEAN FsFilterIsAttachedToDevice(
 	PDEVICE_OBJECT nextDevObj = NULL;
 	PDEVICE_OBJECT currentDevObj = IoGetAttachedDeviceReference(DeviceObject);
 
-	//
-	//  Scan down the list to find our device object.
-	//
-
+	//  Scan down the list to find our device object for attachment to file device object
 	do
 	{
 		if (FsFilterIsMyDeviceObject(currentDevObj))
@@ -143,16 +115,8 @@ BOOLEAN FsFilterIsAttachedToDevice(
 			return TRUE;
 		}
 
-		//
-		//  Get the next attached object.
-		//
-
+		//  Get the next attached object before moving to the next one
 		nextDevObj = IoGetLowerDeviceObject(currentDevObj);
-
-		//
-		//  Dereference our current device object, before moving to the next one.
-		//
-
 		ObDereferenceObject(currentDevObj);
 		currentDevObj = nextDevObj;
 	} while (NULL != currentDevObj);
