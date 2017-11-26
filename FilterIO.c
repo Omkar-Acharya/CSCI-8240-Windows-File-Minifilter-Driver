@@ -1,6 +1,6 @@
 #include "SystemFilter.h"
 
-//Fast-IO Handlers to 
+//Fast-IO Handlers to fetch the device objects stored in cache
 
 BOOLEAN CheckFilterFastIO(
 	__in PFILE_OBJECT       FileObject,
@@ -13,9 +13,7 @@ BOOLEAN CheckFilterFastIO(
 	__in PDEVICE_OBJECT     DeviceObject
 )
 {
-	//
 	//  Pass through logic for this type of Fast I/O
-	//
 
 	PDEVICE_OBJECT    nextDeviceObject = ((PFSFILTER_DEVICE_EXTENSION)DeviceObject->DeviceExtension)->AttachedToDeviceObject;
 	PFAST_IO_DISPATCH fastIoDispatch = nextDeviceObject->DriverObject->FastIoDispatch;
@@ -35,7 +33,7 @@ BOOLEAN CheckFilterFastIO(
 
 	return FALSE;
 }
-
+//read filter handler
 BOOLEAN ReadFilter(
 	__in PFILE_OBJECT       FileObject,
 	__in PLARGE_INTEGER     FileOffset,
@@ -47,9 +45,7 @@ BOOLEAN ReadFilter(
 	__in PDEVICE_OBJECT     DeviceObject
 )
 {
-	//
-	//  Pass through logic for this type of Fast I/O
-	//
+	//Pass through logic for this type of Fast I/O
 
 	PDEVICE_OBJECT    nextDeviceObject = ((PFSFILTER_DEVICE_EXTENSION)DeviceObject->DeviceExtension)->AttachedToDeviceObject;
 	PFAST_IO_DISPATCH fastIoDispatch = nextDeviceObject->DriverObject->FastIoDispatch;
@@ -69,7 +65,7 @@ BOOLEAN ReadFilter(
 
 	return FALSE;
 }
-
+//write filter handler
 BOOLEAN WriteFilter(
 	__in PFILE_OBJECT       FileObject,
 	__in PLARGE_INTEGER     FileOffset,
@@ -81,10 +77,8 @@ BOOLEAN WriteFilter(
 	__in PDEVICE_OBJECT     DeviceObject
 )
 {
-	//
-	//  Pass through logic for this type of Fast I/O
-	//
-
+	//Pass through logic for this type of Fast I/O
+	
 	PDEVICE_OBJECT    nextDeviceObject = ((PFSFILTER_DEVICE_EXTENSION)DeviceObject->DeviceExtension)->AttachedToDeviceObject;
 	PFAST_IO_DISPATCH fastIoDispatch = nextDeviceObject->DriverObject->FastIoDispatch;
 
@@ -103,7 +97,7 @@ BOOLEAN WriteFilter(
 
 	return FALSE;
 }
-
+//basic query handler
 BOOLEAN BasicQueryInfo(
 	__in PFILE_OBJECT       FileObject,
 	__in BOOLEAN            Wait,
@@ -114,7 +108,7 @@ BOOLEAN BasicQueryInfo(
 {
 	return FALSE;
 }
-
+//standard query handler
 BOOLEAN StandardQueryInfo(
 	__in PFILE_OBJECT       FileObject,
 	__in BOOLEAN            Wait,
@@ -125,7 +119,7 @@ BOOLEAN StandardQueryInfo(
 {
 	return FALSE;
 }
-
+//lock filter handler
 BOOLEAN LockFilter(
 	__in PFILE_OBJECT       FileObject,
 	__in PLARGE_INTEGER     FileOffset,
@@ -140,7 +134,7 @@ BOOLEAN LockFilter(
 {
 	return FALSE;
 }
-
+//unlock single filter handler
 BOOLEAN UnlockSingleFilter(
 	__in PFILE_OBJECT       FileObject,
 	__in PLARGE_INTEGER     FileOffset,
@@ -154,6 +148,7 @@ BOOLEAN UnlockSingleFilter(
 	return FALSE;
 }
 
+//unlock all filter  filter handler
 BOOLEAN UnlockAllFilter(
 	__in PFILE_OBJECT       FileObject,
 	__in PEPROCESS          ProcessId,
@@ -163,7 +158,7 @@ BOOLEAN UnlockAllFilter(
 {
 	return FALSE;
 }
-
+//unlock all by key filter handler
 BOOLEAN UnlockAllByKeyFilter(
 	__in PFILE_OBJECT       FileObject,
 	__in PVOID              ProcessId,
@@ -174,7 +169,7 @@ BOOLEAN UnlockAllByKeyFilter(
 {
 	return FALSE;
 }
-
+//device control filter handler
 BOOLEAN DeviceControlFilter(
 	__in PFILE_OBJECT       FileObject,
 	__in BOOLEAN            Wait,
@@ -195,7 +190,7 @@ VOID DetachDeviceFilter(
 	__in PDEVICE_OBJECT     TargetDevice
 )
 {}
-
+//query network information handler
 BOOLEAN QueryNetworkOpenInfoFilter(
 	__in PFILE_OBJECT       FileObject,
 	__in BOOLEAN            Wait,
@@ -206,7 +201,7 @@ BOOLEAN QueryNetworkOpenInfoFilter(
 {
 	return FALSE;
 }
-
+//
 BOOLEAN MdlReadFilter(
 	__in PFILE_OBJECT       FileObject,
 	__in PLARGE_INTEGER     FileOffset,
