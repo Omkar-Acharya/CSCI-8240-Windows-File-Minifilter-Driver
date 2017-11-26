@@ -11,10 +11,8 @@ NTSTATUS FsFilterAttachToDevice(
 	PFSFILTER_DEVICE_EXTENSION  pDevExt = NULL;
 	ULONG                       i = 0;
 
-	ASSERT(!FsFilterIsAttachedToDevice(DeviceObject));
-
+	ASSERT(!FsFilterIsAttachedToDevice(DeviceObject)); //macro to check correct device 
 	//  Create a new device object we can attach
-
 	status = IoCreateDevice(
 		g_FileDriverObject,
 		sizeof(FSFILTER_DEVICE_EXTENSION),
