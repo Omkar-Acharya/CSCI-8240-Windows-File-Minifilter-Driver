@@ -1,7 +1,6 @@
 #include "SystemFilter.h"
 
-/////////////////////////////////////////////////////////////////////////////
-// Fast-IO Handlers
+//Fast-IO Handlers to 
 
 BOOLEAN CheckFilterFastIO(
 	__in PFILE_OBJECT       FileObject,
