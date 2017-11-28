@@ -1,4 +1,4 @@
-//In this IRP checks for the I/O routines before running through the filter driver
+//In this the IRP checks for the I/O routines before running through the filter driver
 #include "SystemFilter.h"
 
 NTSTATUS FsFilterDispatchPassThrough(
